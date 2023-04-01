@@ -1,0 +1,67 @@
+<configuration >
+    <!--    %d：输出时间，格式为指定格式。
+    %-5level：输出日志级别，左对齐，占5个字符的宽度。
+    %thread：输出线程名称。
+    %c{36}:输出日志类路径，最长不超过36个字符。
+    %M:日志对应的方法名
+    %L：对应代码行号
+    %msg：输出日志消息。
+    %n：输出平台相关的行分隔符。-->
+
+    <property name ="pattern" value ="%d{yyyy-MM-dd HH:mm:ss} | [%-5level] [%thread] %c{36} %M %L - %msg %n"></property>
+
+    <property name ="log_dir" value ="/var/log"></property>
+
+    <!--控制台打印日志-->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${pattern}</pattern>
+        </encoder>
+        <target>System.err</target>
+    </appender>
+
+
+    <!-- 按时间和大小进行日志滚动 -->
+    <appender name="roll_file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log_dir}/oxy-logback.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${log_dir}/oxy-logback-%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <!--文件最多保存的时间-->
+            <maxHistory>30</maxHistory>
+            <!--文件超过这个大小则生成新的压缩文件-->
+            <maxFileSize>1MB</maxFileSize>
+        </rollingPolicy>
+
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <!--将日志输出到文件中-->
+    <appender name="file" class="ch.qos.logback.core.FileAppender">
+        <file>${log_dir}/oxy-logback.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <!--将日志输出到成html格式-->
+    <appender name="html_file" class="ch.qos.logback.core.FileAppender">
+        <file>${log_dir}/oxy-logback.html</file>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class ="ch.qos.logback.classic.html.HTMLLayout">
+                <pattern>${pattern}</pattern>
+            </layout>
+        </encoder>
+
+    </appender>
+
+
+    <root level="all">
+        <appender-ref ref="console" />
+        <appender-ref ref="file" />
+        <appender-ref ref="html_file" />
+        <appender-ref ref="roll_file" />
+    </root>
+</configuration>

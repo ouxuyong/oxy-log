@@ -10,6 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>oxy-logback</module>
+        <module>oxy-logback-springboot</module>
     </modules>
 
 
